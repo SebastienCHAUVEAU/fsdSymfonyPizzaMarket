@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CartController!{% endblock %}
+
+{% block body %}
+
+   <h1>Product index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Description</th>
+                <th>Picture</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in productsInCart %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+
+                <td>{{(product.price/100)| format_currency('EUR',locale="fr") }}</td>
+                <td>{{app.session.get("cart")[product.id]}}</td>
+                <td>{{ product.description }}</td>
+                <td><img src="/uploads/{{ product.picture }}" height="100" width="100"></img></td>
+
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
