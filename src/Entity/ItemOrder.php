@@ -27,6 +27,11 @@ class ItemOrder
         return $this->id;
     }
 
+   public function  __toString() 
+   {
+        return $this->id;
+   }
+
     public function getQuantity(): ?int
     {
         return $this->quantity;

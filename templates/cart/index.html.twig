@@ -19,7 +19,9 @@
             </tr>
         </thead>
         <tbody>
+        {% set totalPrice = 0 %}
         {% for product in productsInCart %}
+         {% set totalPrice = totalPrice + product.price/100 * app.session.get("cart")[product.id] %}
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
@@ -37,5 +39,9 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <h2>TOTAL</h2>
+    <p>{{totalPrice}}</p>
+    <a href="{{ path('command_create')}}"><button type="button">VALIDER LE PANIER</button></a>
 
 {% endblock %}
