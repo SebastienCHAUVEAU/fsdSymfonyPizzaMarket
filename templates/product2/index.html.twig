@@ -5,6 +5,8 @@
 {% block body %}
     <h1>Product index</h1>
 
+    {{form(form)}}
+
     <div {{ stimulus_controller('hello') }}>
         <input type="text" {{ stimulus_target('hello', 'name') }}>
 

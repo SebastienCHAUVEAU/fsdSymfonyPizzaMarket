@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Form\SearchProductType;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,14 +32,14 @@ class Product2Controller extends AbstractController
     #[Route('/', name: 'app_product2_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
-        //var_dump(php_ini_loaded_file(), php_ini_scanned_files());
-        //phpinfo();
-
+       
+        $form=$this->createForm(SearchProductType::class);
         
         return $this->render('product2/index.html.twig', [
             'products' => $productRepository->findAll(),
             'minPrice' => $productRepository->findBy([],["price" => "ASC"],1),
             'maxPrice' => $productRepository->findBy([],["price" => "DESC"],1),
+            'form' => $form
         ]);
     }
 
