@@ -11,7 +11,8 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Price</th>
+                <th>Price HT</th>
+                <th>Price TTC</th>
                 <th>Quantity</th>
                 <th>Description</th>
                 <th>Picture</th>
@@ -25,8 +26,8 @@
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
-
                 <td>{{(product.price/100)| format_currency('EUR',locale="fr") }}</td>
+                <td>{% if product.codeTva == 1 %}{{(product.price / 100 * (1 + codeTVA / 100)) | format_currency('EUR',locale="fr")}}{% elseif product.codeTva == 2 %}{{(product.price / 100 * (1 + codeTVA10 / 100)) | format_currency('EUR',locale="fr")}}{% endif %}</td>
                 <td>{{app.session.get("cart")[product.id]}}</td>
                 <td>{{ product.description }}</td>
                 <td><img src="/uploads/{{ product.picture }}" height="100" width="100"></img></td>
@@ -40,8 +41,13 @@
         </tbody>
     </table>
 
-    <h2>TOTAL</h2>
-    <p>{{totalPrice}}</p>
+    <h2>TOTAL HT</h2>
+    <p>{{totalPrice | format_currency('EUR',locale="fr")}}</p>
+
+    <h2>TOTAL TTC</h2>
+    {% set totalPriceTTC = totalPrice * (1 + tva / 100 ) %}
+    <p>{{totalPriceTTC | format_currency('EUR',locale="fr")}}</p>
+
     <a href="{{ path('command_create')}}"><button type="button">VALIDER LE PANIER</button></a>
 
 {% endblock %}

@@ -13,12 +13,75 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/product2')]
 class Product2Controller extends AbstractController
 {
+
+    #[Route('/debug', name: 'app_product2_debug', methods: ['GET'])]
+    public function debug(ProductRepository $productRepository): Response
+    {
+        var_dump(php_ini_loaded_file(), php_ini_scanned_files());
+        phpinfo();
+
+        
+        return $this->render('base.html.twig', [
+        //     'products' => $productRepository->findAll(),
+        //     'minPrice' => $productRepository->findBy([],["price" => "ASC"],1),
+        //     'maxPrice' => $productRepository->findBy([],["price" => "DESC"],1),
+         ]);
+    }
+
     #[Route('/', name: 'app_product2_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
+        //var_dump(php_ini_loaded_file(), php_ini_scanned_files());
+        //phpinfo();
+
+        
         return $this->render('product2/index.html.twig', [
             'products' => $productRepository->findAll(),
+            'minPrice' => $productRepository->findBy([],["price" => "ASC"],1),
+            'maxPrice' => $productRepository->findBy([],["price" => "DESC"],1),
         ]);
+    }
+
+    #[Route('/filter', name: 'app_product2_index_sorting', methods: ['GET'])]
+    public function indexASC(ProductRepository $productRepository, Request $request): Response
+    {
+      $sortingType = $request->get("productSortingSelect");
+        //dd($sortingType);
+        if($sortingType == "ascName"){
+            return $this->render('product2/index.html.twig', [
+                'products' => $productRepository->findBy([],["name"=>"ASC"]),
+                'minPrice' => $productRepository->findBy([],["price" => "ASC"],1),
+            'maxPrice' => $productRepository->findBy([],["price" => "DESC"],1),
+            ]);
+        }
+
+        if($sortingType == "descName"){
+            return $this->render('product2/index.html.twig', [
+                'products' => $productRepository->findBy([],["name"=>"DESC"]),
+                'minPrice' => $productRepository->findBy([],["price" => "ASC"],1),
+            'maxPrice' => $productRepository->findBy([],["price" => "DESC"],1),
+            ]);
+        }
+
+        if($sortingType == "ascPrice"){
+            return $this->render('product2/index.html.twig', [
+                'products' => $productRepository->findBy([],["price"=>"ASC"]),
+                'minPrice' => $productRepository->findBy([],["price" => "ASC"],1),
+            'maxPrice' => $productRepository->findBy([],["price" => "DESC"],1),
+            ]);
+        }
+
+        if($sortingType == "descPrice"){
+            return $this->render('product2/index.html.twig', [
+                'products' => $productRepository->findBy([],["price"=>"DESC"]),
+                'minPrice' => $productRepository->findBy([],["price" => "ASC"],1),
+            'maxPrice' => $productRepository->findBy([],["price" => "DESC"],1),
+            ]);
+        }
+
+    
+
+        
     }
 
     #[Route('/new', name: 'app_product2_new', methods: ['GET', 'POST'])]

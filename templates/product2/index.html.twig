@@ -5,6 +5,24 @@
 {% block body %}
     <h1>Product index</h1>
 
+    <form action="{{ path('app_product2_index_sorting')}}">
+    <label for="productSortingSelect">Type de tri</lable>
+        <select name="productSortingSelect" id="productSortingSelect">
+            <option value="ascPrice">Prix croissants</option>
+            <option value="descPrice">Prix décroissants</option>
+            <option value="ascName">Ordre Alphabétique</option>
+            <option value="descName">Ordre Alphabétique inversé</option>
+        </select>
+       <button type="submit">APPLIQUER</button>
+    </form>
+
+    <form>
+      <input type="range" id="volume" name="volume"
+         min="{{minPrice.0.price}}" max="{{maxPrice.0.price}}">
+      <label for="volume">Fourchette de prix (de {{minPrice.0.price / 100}} à {{maxPrice.0.price / 100}})</label>
+      <a href="{{ path('app_product2_index_sorting')}}"><button type="submit">APPLIQUER</button></a>
+    </form>
+
     <table class="table">
         <thead>
             <tr>

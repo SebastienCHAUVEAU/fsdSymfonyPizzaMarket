@@ -9,6 +9,7 @@ use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -17,6 +18,10 @@ class CommandController extends AbstractController
     #[Route('/command/create', name: 'command_create')]
     public function index(SessionInterface $session, ProductRepository $productRepo, EntityManagerInterface $em): Response
     {
+
+        $tokenProvider = $this->container->get('security.csrf.token_manager');
+        $token = $tokenProvider->getToken('stripe_token')->getValue();
+
         $cart = $session->get("cart",[]);
         $command = new Order;
         $totalPrice = 0;
@@ -57,7 +62,7 @@ class CommandController extends AbstractController
         $session = \Stripe\Checkout\Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => 'http://localhost:8000/command/payment_success',
+            'success_url' => 'http://localhost:8000/command/payment_success/' . $token,
             'cancel_url' => 'http://localhost:8000/command/payment_error'
             ]);
         
@@ -69,11 +74,16 @@ class CommandController extends AbstractController
         
     }
 
-    #[Route('/command/payment_success', name: 'command_payment_success')]
-    public function payment_success(SessionInterface $session): Response
+    #[Route('/command/payment_success/{token}', name: 'command_payment_success')]
+    public function payment_success(SessionInterface $session,$token): Response
     {
-        $session->set("cart",[]);
-        dd("OK");
+        if($this->isCsrfTokenValid('stripe_token',$token)){
+            $session->set("cart",[]);
+            dd("OK");
+        }else{
+            dd("FALSE SUCCESS");
+        }
+        
 
         
     }

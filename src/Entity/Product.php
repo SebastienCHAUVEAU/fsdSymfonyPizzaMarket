@@ -31,6 +31,9 @@ class Product
     #[ORM\OneToMany(mappedBy: 'productLink', targetEntity: ItemOrder::class)]
     private Collection $itemOrders;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $codeTva = null;
+
     public function __construct()
     {
         $this->itemOrders = new ArrayCollection();
@@ -120,6 +123,18 @@ class Product
                 $itemOrder->setProductLink(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCodeTva(): ?int
+    {
+        return $this->codeTva;
+    }
+
+    public function setCodeTva(?int $codeTva): self
+    {
+        $this->codeTva = $codeTva;
 
         return $this;
     }
