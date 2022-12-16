@@ -5,6 +5,16 @@
 {% block body %}
     <h1>Product index</h1>
 
+    <div {{ stimulus_controller('hello') }}>
+        <input type="text" {{ stimulus_target('hello', 'name') }}>
+
+        <button {{ stimulus_action('hello', 'greet') }}>
+            Greet
+        </button>
+
+        <div {{ stimulus_target('hello', 'output') }}></div>
+    </div>
+
     <form action="{{ path('app_product2_index_sorting')}}">
     <label for="productSortingSelect">Type de tri</lable>
         <select name="productSortingSelect" id="productSortingSelect">
